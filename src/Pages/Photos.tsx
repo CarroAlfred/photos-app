@@ -1,17 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { usePhotosInfiniteQuery } from "../core/hooks/usePhotos";
-import { Photo } from "../core/models/Photo";
 import "./styles.css";
 
 export const Photos = () => {
   const [title, setTitle] = useState("");
   const { data, isError, fetchNextPage, hasNextPage } = usePhotosInfiniteQuery({
-    title: title,
+    title,
   });
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(event.target.value);
-  };
 
   const [displayedCount, setDisplayedCount] = useState(10); // Initial display count is 10
 
@@ -46,7 +41,11 @@ export const Photos = () => {
     <div className="main">
       <div className="search">
         <span className="label">Search Photo</span>
-        <input type="text" value={title} onChange={handleInputChange} />
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
       </div>
       {photoList.length === 0 && (
         <div className="nothing-to-see-here">
@@ -55,7 +54,7 @@ export const Photos = () => {
       )}
 
       <div title="content" className="grid">
-        {photoList?.map((photo: Photo) => {
+        {photoList?.map((photo) => {
           return (
             <div key={photo.id} className="card">
               <img className="photo" src={photo.url} alt={photo.title} />
